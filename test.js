@@ -14,6 +14,9 @@ const points = [
     [83,6],[21,72],[78,30],[75,53],[41,11],[95,20],[30,38],[96,82],[65,48],[33,18],[87,28],[10,10],[40,34],
     [10,20],[47,29],[46,78]];
 
+const x = new Float32Array(points.map(point => point[0]));
+const y = new Float32Array(points.map(point => point[1]));
+
 const ids = [
     97,74,95,30,77,38,76,27,80,55,72,90,88,48,43,46,65,39,62,93,9,96,47,8,3,12,15,14,21,41,36,40,69,56,85,78,17,71,44,
     19,18,13,99,24,67,33,37,49,54,57,98,45,23,31,66,68,0,32,5,51,75,73,84,35,81,22,61,89,1,11,86,52,94,16,2,6,25,92,
@@ -28,7 +31,7 @@ const coords = [
     87,96,98,96,82];
 
 test('creates an index', (t) => {
-    const index = new KDBush(points, undefined, undefined, 10);
+    const index = new KDBush(x,y,10);
 
     t.same(index.ids, ids, 'ids are kd-sorted');
     t.same(index.coords, coords, 'coords are kd-sorted');
@@ -37,22 +40,20 @@ test('creates an index', (t) => {
 });
 
 test('range search', (t) => {
-    const index = new KDBush(points, undefined, undefined, 10);
+    const index = new KDBush(x,y,10);
 
     const result = index.range(20, 30, 50, 70);
 
     t.same(result, [60,20,45,3,17,71,44,19,18,15,69,90,62,96,47,8,77,72], 'returns ids');
 
     for (const id of result) {
-        const p = points[id];
-        if (p[0] < 20 || p[0] > 50 || p[1] < 30 || p[1] > 70)
+        if (x[id] < 20 || x[id] > 50 || y[id] < 30 || y[id] > 70)
             t.fail('result point in range');
     }
     t.pass('result points in range');
 
     for (const id of result) {
-        const p = points[id];
-        if (result.indexOf(id) < 0 && p[0] >= 20 && p[0] <= 50 && p[1] >= 30 && p[1] <= 70)
+        if (result.indexOf(id) < 0 && x[id] >= 20 && x[id] <= 50 && y[id] >= 30 && y[id] <= 70)
             t.fail('outside point not in range');
     }
     t.pass('outside points not in range');
@@ -61,7 +62,7 @@ test('range search', (t) => {
 });
 
 test('radius search', (t) => {
-    const index = new KDBush(points, undefined, undefined, 10);
+    const index = new KDBush(x,y,10);
 
     const qp = [50, 50];
     const r = 20;
@@ -72,14 +73,13 @@ test('radius search', (t) => {
     t.same(result, [60,6,25,92,42,20,45,3,71,44,18,96], 'returns ids');
 
     for (const id of result) {
-        const p = points[id];
-        if (sqDist(p, qp) > r2) t.fail('result point in range');
+        if (sqDist([x[id],y[id]], qp) > r2) t.fail('result point in range');
     }
     t.pass('result points in range');
 
     for (const id of result) {
-        const p = points[id];
-        if (result.indexOf(id) < 0 && sqDist(p, qp) <= r2)
+
+        if (result.indexOf(id) < 0 && sqDist([x[id],y[id]], qp) <= r2)
             t.fail('outside point not in range');
     }
     t.pass('outside points not in range');

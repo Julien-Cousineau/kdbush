@@ -1,5 +1,5 @@
 {
-  "name": "kdbush",
+  "name": "@julien.cousineau/kdbush",
   "version": "3.0.0",
   "description": "A very fast static 2D index for points based on kd-tree.",
   "module": "src/index.js",
@@ -8,7 +8,7 @@
   "unpkg": "kdbush.min.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/mourner/kdbush.git"
+    "url": "git://github.com/julien.cousineau/kdbush.git"
   },
   "devDependencies": {
     "eslint": "^5.5.0",
@@ -20,7 +20,7 @@
     "tape": "^4.9.1"
   },
   "scripts": {
-    "pretest": "eslint src test.js bench.js rollup.config.js",
+    "pretest": "eslint --fix src test.js bench.js rollup.config.js",
     "test": "tape -r esm test.js",
     "bench": "node -r esm bench.js",
     "build": "rollup -c",

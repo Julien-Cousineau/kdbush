@@ -3,23 +3,24 @@ import sort from './sort';
 import range from './range';
 import within from './within';
 
+const defaultGetX = p => p[0];
+const defaultGetY = p => p[1];
+
 export default class KDBush {
-    constructor(x, y, nodeSize = 64, ArrayType = Float64Array) {
-        if (x.length !== y.length) { console.warn('Size of x and y must match'); return null; }
-        const n = x.length;
+    constructor(points, getX = defaultGetX, getY = defaultGetY, nodeSize = 64, ArrayType = Float64Array) {
         this.nodeSize = nodeSize;
+        this.points = points;
 
-
-        const IndexArrayType = n < 65536 ? Uint16Array : Uint32Array;
+        const IndexArrayType = points.length < 65536 ? Uint16Array : Uint32Array;
 
         // store indices to the input array and coordinates in separate typed arrays
-        const ids = this.ids = new IndexArrayType(n);
-        const coords = this.coords = new ArrayType(n * 2);
+        const ids = this.ids = new IndexArrayType(points.length);
+        const coords = this.coords = new ArrayType(points.length * 2);
 
-        for (let i = 0; i < n; i++) {
+        for (let i = 0; i < points.length; i++) {
             ids[i] = i;
-            coords[2 * i] = x[i];
-            coords[2 * i + 1] = y[i];
+            coords[2 * i] = getX(points[i]);
+            coords[2 * i + 1] = getY(points[i]);
         }
 
         // kd-sort both arrays for efficient search (see comments in sort.js)
