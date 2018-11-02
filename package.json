@@ -1,6 +1,6 @@
 {
   "name": "@julien.cousineau/kdbush",
-  "version": "3.0.0",
+  "version": "1.0.0",
   "description": "A very fast static 2D index for points based on kd-tree.",
   "module": "src/index.js",
   "main": "kdbush.js",
@@ -24,7 +24,10 @@
     "test": "tape -r esm test.js",
     "bench": "node -r esm bench.js",
     "build": "rollup -c",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "patch": "npm version patch && npm publish --access=public",
+    "minor": "npm version minor && npm publish --access=public",
+    "major": "npm version major && npm publish --access=public"
   },
   "eslintConfig": {
     "extends": "mourner"
@@ -43,6 +46,6 @@
     "kdbush.min.js",
     "src"
   ],
-  "author": "Vladimir Agafonkin",
+  "author": "Julien Cousineau",
   "license": "ISC"
 }
